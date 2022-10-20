@@ -1,0 +1,91 @@
+package com.example.cakeapp46;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Adapter;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.DatePicker;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.TimePicker;
+import android.widget.Toast;
+
+import java.util.Calendar;
+
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+    String f[]={"Vanilla 300","Chocolate 300","BlackForest 400","BlackBerry 350","RedVelvet 450","ChocoVanilla 350","ButterScotch 250"};
+    Double cost,qua;
+    String sq,sq1;
+    TextView tv,dv,out;
+    AutoCompleteTextView fl;
+    Spinner qu;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        tv=findViewById(R.id.tv);
+        dv=findViewById(R.id.dv);
+        fl=findViewById(R.id.flavour);
+        qu=findViewById(R.id.quantity);
+        ArrayAdapter a=new ArrayAdapter(this, android.R.layout.simple_list_item_1,f);
+        fl.setAdapter(a);
+        fl.setThreshold(1);
+        Toast.makeText(getApplicationContext(), "list", Toast.LENGTH_SHORT).show();
+        ArrayAdapter a1=new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item,getResources().getTextArray(R.array.Quantity));
+        qu.setAdapter(a1);
+        qu.setOnItemSelectedListener(this);
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        sq=adapterView.getItemAtPosition(i).toString();
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
+    }
+
+    public void sdate(View view) {
+        final Calendar c=Calendar.getInstance();
+        final int y=c.get(Calendar.YEAR);
+        final int m=c.get(Calendar.MONTH);
+        final int d=c.get(Calendar.DATE);
+        DatePickerDialog dpd=new DatePickerDialog(this, android.R.style.Theme_DeviceDefault_Dialog, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+                dv.setText(i2+":"+(i1+1)+":"+i);
+            }
+        },y,m,d);
+        dpd.show();
+    }
+
+    public void stime(View view) {
+        Calendar c=Calendar.getInstance();
+        int h=c.get(Calendar.HOUR);
+        int m=c.get(Calendar.MINUTE);
+        int s=c.get(Calendar.SECOND);
+        TimePickerDialog tpd=new TimePickerDialog(this, android.R.style.Theme_DeviceDefault_Dialog, new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker timePicker, int i, int i1) {
+                tv.setText(i+":"+i1);
+            }
+        },h,m,false);
+        tpd.show();
+    }
+
+    public void result(View view) {
+        sq1=fl.getText().toString();
+        qua=Double.parseDouble(sq);
+        String[] kgr = sq1.split(" ");
+        cost= qua * Double.parseDouble(kgr[1]);
+        Toast.makeText(getApplicationContext(), "Flavour:"+kgr[0]+"\n Quantity:"+qu.getSelectedItem().toString() +" Kg\n Date:"+dv.getText().toString() +"\n Time:"+tv.getText().toString() +"\n Cost:"+cost, Toast.LENGTH_LONG).show();
+    }
+}
